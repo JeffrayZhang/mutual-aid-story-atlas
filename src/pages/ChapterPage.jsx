@@ -1,13 +1,27 @@
 import { motion } from 'framer-motion';
+import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
+import { useCallback, useEffect } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import InteractiveModule from '../components/InteractiveModule';
 import PageIntro from '../components/PageIntro';
 import StoryRouteMap from '../components/StoryRouteMap';
 import { coreQuestions, storyChapters } from '../data/siteData';
+import { useProgress } from '../hooks/useProgress';
 
 function ChapterPage() {
   const { slug } = useParams();
   const chapterIndex = storyChapters.findIndex((chapter) => chapter.slug === slug);
+  const { visited, completed, markVisited, markCompleted } = useProgress();
+
+  useEffect(() => {
+    if (slug && chapterIndex !== -1) {
+      markVisited(slug);
+    }
+  }, [slug, chapterIndex, markVisited]);
+
+  const handleModuleComplete = useCallback(() => {
+    if (slug) markCompleted(slug);
+  }, [slug, markCompleted]);
 
   if (chapterIndex === -1) {
     return <Navigate to="/story-map" replace />;
@@ -16,6 +30,7 @@ function ChapterPage() {
   const chapter = storyChapters[chapterIndex];
   const previousChapter = storyChapters[chapterIndex - 1] ?? null;
   const nextChapter = storyChapters[chapterIndex + 1] ?? null;
+  const isCompleted = completed.includes(chapter.slug);
   const moduleTypeLabels = {
     chat: 'Chat scene',
     timeline: 'Timeline build',
@@ -41,7 +56,7 @@ function ChapterPage() {
         stats={[
           { value: chapter.region, label: 'region' },
           { value: moduleTypeLabels[chapter.module.type], label: 'interactive mode' },
-          { value: chapter.chapterLinks.map((link) => link.toUpperCase()).join(' · '), label: 'linked questions' },
+          { value: isCompleted ? 'Completed' : 'In progress', label: 'status' },
         ]}
       />
 
@@ -53,10 +68,10 @@ function ChapterPage() {
               <h2 className="section-title mb-0">Where Mina is in the atlas</h2>
             </div>
             <Link to="/story-map" className="text-link">
-              Back to full route
+              <ArrowLeft size={14} /> Back to full route
             </Link>
           </div>
-          <StoryRouteMap activeSlug={chapter.slug} compact />
+          <StoryRouteMap activeSlug={chapter.slug} compact visited={visited} completed={completed} />
         </div>
       </section>
 
@@ -97,8 +112,11 @@ function ChapterPage() {
               transition={{ duration: 0.35, delay: 0.05 }}
               className="paper-card h-100"
             >
-              <p className="eyebrow mb-3">Interactive chapter</p>
-              <InteractiveModule key={chapter.slug} module={chapter.module} />
+              <div className="d-flex justify-content-between align-items-center mb-0">
+                <p className="eyebrow mb-3">Interactive chapter</p>
+                {isCompleted && <span className="done-badge mb-3"><Check size={12} /> Completed</span>}
+              </div>
+              <InteractiveModule key={chapter.slug} module={chapter.module} onComplete={handleModuleComplete} />
             </motion.div>
           </div>
         </div>
@@ -129,12 +147,12 @@ function ChapterPage() {
             <div className="col-md-4">
               {previousChapter ? (
                 <Link to={`/story/${previousChapter.slug}`} className="nav-arrow-link">
-                  <span className="small-label d-block mb-1">Previous</span>
+                  <span className="small-label d-block mb-1"><ArrowLeft size={12} /> Previous</span>
                   <strong>Chapter {previousChapter.step}: {previousChapter.city}</strong>
                 </Link>
               ) : (
                 <Link to="/" className="nav-arrow-link muted">
-                  <span className="small-label d-block mb-1">Previous</span>
+                  <span className="small-label d-block mb-1"><ArrowLeft size={12} /> Previous</span>
                   <strong>Return to prelude</strong>
                 </Link>
               )}
@@ -145,12 +163,12 @@ function ChapterPage() {
             <div className="col-md-4 text-md-end">
               {nextChapter ? (
                 <Link to={`/story/${nextChapter.slug}`} className="nav-arrow-link text-md-end">
-                  <span className="small-label d-block mb-1">Next</span>
+                  <span className="small-label d-block mb-1">Next <ArrowRight size={12} /></span>
                   <strong>Chapter {nextChapter.step}: {nextChapter.city}</strong>
                 </Link>
               ) : (
                 <Link to="/communities" className="nav-arrow-link text-md-end">
-                  <span className="small-label d-block mb-1">Next</span>
+                  <span className="small-label d-block mb-1">Next <ArrowRight size={12} /></span>
                   <strong>Finish with community uses</strong>
                 </Link>
               )}

@@ -700,6 +700,49 @@ export const audienceGuides = [
   },
 ];
 
+export const furtherReading = [
+  {
+    id: 'spade-2020',
+    author: 'Spade, D.',
+    year: 2020,
+    title: 'Mutual Aid: Building Solidarity During This Crisis (and the Next)',
+    publisher: 'Verso Books',
+    note: 'A foundational text on how mutual aid differs from charity and state services, with practical guidance for building networks.',
+  },
+  {
+    id: 'kropotkin-1902',
+    author: 'Kropotkin, P.',
+    year: 1902,
+    title: 'Mutual Aid: A Factor of Evolution',
+    publisher: 'William Heinemann',
+    note: 'The classic argument that cooperation, not only competition, drives survival and social organization.',
+  },
+  {
+    id: 'solnit-2009',
+    author: 'Solnit, R.',
+    year: 2009,
+    title: 'A Paradise Built in Hell: The Extraordinary Communities That Arise in Disaster',
+    publisher: 'Viking',
+    note: 'Documents how communities self-organize during crises, often outperforming formal institutions in the immediate aftermath.',
+  },
+  {
+    id: 'costanza-chock-2020',
+    author: 'Costanza-Chock, S.',
+    year: 2020,
+    title: 'Design Justice: Community-Led Practices to Build the Worlds We Need',
+    publisher: 'MIT Press',
+    note: 'Explores how design processes can center the voices of those most affected by outcomes, directly relevant to platform trust and inclusion.',
+  },
+  {
+    id: 'big-door-brigade',
+    author: 'Big Door Brigade',
+    year: 2020,
+    title: 'What Is Mutual Aid?',
+    publisher: null,
+    note: 'A widely shared introductory explainer that distinguishes mutual aid from charity and social services.',
+  },
+];
+
 export const responsiblePractice = [
   'Verify public information before sharing it widely, especially hours, locations, and contact methods.',
   'Avoid pressuring people to disclose more personal information than they need to access support.',

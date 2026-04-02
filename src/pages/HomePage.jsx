@@ -1,20 +1,25 @@
 import { motion } from 'framer-motion';
+import { ArrowRight, Check } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import PageIntro from '../components/PageIntro';
 import StoryRouteMap from '../components/StoryRouteMap';
 import { coreQuestions, storyChapters, storyIntro } from '../data/siteData';
+import { useProgress } from '../hooks/useProgress';
 
 function HomePage() {
+  const { visited, completed } = useProgress();
+  const totalCompleted = completed.length;
+
   return (
     <div>
       <PageIntro
         eyebrow="Mutual Aid Story Atlas"
         title="How digital mutual aid turns simple tools into community care"
-        intro="Follow Mina, a fictional composite character, across five cities to see how chats, maps, volunteer sheets, and low-bandwidth communication can support care, trust, and participation. Each stop is a chapter with an interactive scene, and together they answer the project’s three research questions."
+        intro="Follow Mina, a fictional composite character, across five cities to see how chats, maps, volunteer sheets, and low-bandwidth communication can support care, trust, and participation. Each stop is a chapter with an interactive scene, and together they answer the project's three research questions."
         note={storyIntro.note}
         noteTitle="Why Mina is fictional"
         actions={[
-          { to: '/story/toronto', label: 'Start Mina’s journey' },
+          { to: '/story/toronto', label: "Start Mina\u2019s journey" },
           { to: '/story-map', label: 'Explore the full route', variant: 'secondary' },
         ]}
         stats={[
@@ -34,15 +39,22 @@ function HomePage() {
                   <h2 className="section-title mb-0">Five stops, one connected lesson</h2>
                 </div>
                 <Link to="/story/toronto" className="primary-link-button">
-                  Start Mina’s journey
+                  Start Mina's journey <ArrowRight size={16} />
                 </Link>
               </div>
-              <StoryRouteMap />
+              <StoryRouteMap visited={visited} completed={completed} />
             </div>
           </div>
           <div className="col-lg-5">
             <div className="paper-card h-100 subdued-panel">
               <p className="eyebrow mb-3">What to do next</p>
+
+              {totalCompleted > 0 && (
+                <div className="progress-banner mb-3">
+                  <Check size={16} /> {totalCompleted} of 5 chapters completed
+                </div>
+              )}
+
               <div className="journey-checklist mb-4">
                 <div className="checklist-item">
                   <span className="checklist-number">1</span>
@@ -109,25 +121,31 @@ function HomePage() {
           </div>
         </div>
         <div className="row g-4">
-          {storyChapters.map((chapter, index) => (
-            <div className="col-md-6 col-xl-4" key={chapter.slug}>
-              <motion.article
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.15 }}
-                transition={{ duration: 0.35, delay: index * 0.04 }}
-                className="paper-card h-100 route-card"
-              >
-                <p className="small-label mb-2">Chapter {chapter.step} · {chapter.city}</p>
-                <h3 className="card-title mb-2">{chapter.title}</h3>
-                <p className="text-body-secondary mb-3">{chapter.subtitle}</p>
-                <p className="mb-3"><strong>Need:</strong> {chapter.need}</p>
-                <Link to={`/story/${chapter.slug}`} className="text-link">
-                  Open this chapter
-                </Link>
-              </motion.article>
-            </div>
-          ))}
+          {storyChapters.map((chapter, index) => {
+            const isDone = completed.includes(chapter.slug);
+            return (
+              <div className="col-md-6 col-xl-4" key={chapter.slug}>
+                <motion.article
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.15 }}
+                  transition={{ duration: 0.35, delay: index * 0.04 }}
+                  className={`paper-card h-100 route-card ${isDone ? 'card-completed' : ''}`}
+                >
+                  <div className="d-flex justify-content-between align-items-start gap-2 mb-2">
+                    <p className="small-label mb-0">Chapter {chapter.step} · {chapter.city}</p>
+                    {isDone && <span className="done-badge"><Check size={12} /> Done</span>}
+                  </div>
+                  <h3 className="card-title mb-2">{chapter.title}</h3>
+                  <p className="text-body-secondary mb-3">{chapter.subtitle}</p>
+                  <p className="mb-3"><strong>Need:</strong> {chapter.need}</p>
+                  <Link to={`/story/${chapter.slug}`} className="text-link">
+                    {isDone ? 'Revisit this chapter' : 'Open this chapter'} <ArrowRight size={14} />
+                  </Link>
+                </motion.article>
+              </div>
+            );
+          })}
         </div>
       </section>
 

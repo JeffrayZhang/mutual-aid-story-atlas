@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { Check, RotateCcw } from 'lucide-react';
 
 function shuffle(items) {
   const copy = [...items];
@@ -21,12 +22,16 @@ function ModuleFrame({ title, description, children }) {
   );
 }
 
-function ChatSimulation({ module }) {
+function ChatSimulation({ module, onComplete }) {
   const [roundIndex, setRoundIndex] = useState(0);
   const [log, setLog] = useState([{ speaker: 'Narration', kind: 'narration', text: module.intro }]);
   const [complete, setComplete] = useState(false);
 
   const round = module.rounds[roundIndex];
+
+  useEffect(() => {
+    if (complete && onComplete) onComplete();
+  }, [complete, onComplete]);
 
   const handleChoice = (choice) => {
     setLog((current) => [
@@ -78,7 +83,7 @@ function ChatSimulation({ module }) {
           <p className="small-label mb-2">Chapter takeaway</p>
           <p className="mb-3">{module.completion}</p>
           <button type="button" className="subtle-button" onClick={reset}>
-            Play the scene again
+            <RotateCcw size={14} /> Play the scene again
           </button>
         </div>
       )}
@@ -86,7 +91,7 @@ function ChatSimulation({ module }) {
   );
 }
 
-function TrustBuilder({ module }) {
+function TrustBuilder({ module, onComplete }) {
   const [selected, setSelected] = useState([]);
   const [submitted, setSubmitted] = useState(false);
 
@@ -108,6 +113,10 @@ function TrustBuilder({ module }) {
     }
     return 'This selection leans more toward presentation than usability. Try choosing features that help people understand, trust, and safely use the resource.';
   }, [submitted, score, missingThemes.length]);
+
+  useEffect(() => {
+    if (submitted && score >= 7 && onComplete) onComplete();
+  }, [submitted, score, onComplete]);
 
   const toggle = (id) => {
     setSubmitted(false);
@@ -144,10 +153,10 @@ function TrustBuilder({ module }) {
 
       <div className="d-flex flex-wrap gap-2 mb-4">
         <button type="button" className="filter-button active-action" onClick={() => setSubmitted(true)}>
-          Evaluate selection
+          <Check size={15} /> Evaluate selection
         </button>
         <button type="button" className="subtle-button" onClick={reset}>
-          Reset
+          <RotateCcw size={14} /> Reset
         </button>
       </div>
 
@@ -175,7 +184,7 @@ function TrustBuilder({ module }) {
   );
 }
 
-function TimelineBuilder({ module }) {
+function TimelineBuilder({ module, onComplete }) {
   const [pool, setPool] = useState(() => shuffle(module.events));
   const [selected, setSelected] = useState([]);
   const [checked, setChecked] = useState(false);
@@ -185,6 +194,10 @@ function TimelineBuilder({ module }) {
     checked &&
     selected.length === module.events.length &&
     selected.every((event, index) => event.id === module.events[index].id);
+
+  useEffect(() => {
+    if (correct && onComplete) onComplete();
+  }, [correct, onComplete]);
 
   const pick = (event) => {
     if (selected.find((item) => item.id === event.id)) return;
@@ -242,13 +255,13 @@ function TimelineBuilder({ module }) {
 
       <div className="d-flex flex-wrap gap-2">
         <button type="button" className="filter-button active-action" onClick={() => setChecked(true)}>
-          Check order
+          <Check size={15} /> Check order
         </button>
         <button type="button" className="subtle-button" onClick={() => setShowAnswer(true)}>
           Reveal suggested order
         </button>
         <button type="button" className="subtle-button" onClick={reset}>
-          Reset
+          <RotateCcw size={14} /> Reset
         </button>
       </div>
 
@@ -266,10 +279,15 @@ function TimelineBuilder({ module }) {
   );
 }
 
-function PowerSorter({ module }) {
+function PowerSorter({ module, onComplete }) {
   const [responses, setResponses] = useState({});
   const answeredCount = Object.keys(responses).length;
   const score = module.cards.filter((card) => responses[card.id] === card.answer).length;
+  const allAnswered = answeredCount === module.cards.length;
+
+  useEffect(() => {
+    if (allAnswered && score === module.cards.length && onComplete) onComplete();
+  }, [allAnswered, score, module.cards.length, onComplete]);
 
   const choose = (cardId, value) => {
     setResponses((current) => ({ ...current, [cardId]: value }));
@@ -313,15 +331,15 @@ function PowerSorter({ module }) {
 
       <div className="d-flex flex-wrap gap-2 align-items-center">
         <button type="button" className="subtle-button" onClick={reset}>
-          Reset
+          <RotateCcw size={14} /> Reset
         </button>
         <span className="result-chip">Answered {answeredCount}/{module.cards.length}</span>
-        {answeredCount === module.cards.length ? (
+        {allAnswered ? (
           <span className="result-chip strong">Score {score}/{module.cards.length}</span>
         ) : null}
       </div>
 
-      {answeredCount === module.cards.length ? (
+      {allAnswered ? (
         <div className="result-panel mt-4 success" role="status" aria-live="polite">
           <p className="mb-0">{module.completion}</p>
         </div>
@@ -330,7 +348,7 @@ function PowerSorter({ module }) {
   );
 }
 
-function ChannelPlanner({ module }) {
+function ChannelPlanner({ module, onComplete }) {
   const [selected, setSelected] = useState([]);
   const [submitted, setSubmitted] = useState(false);
 
@@ -350,6 +368,10 @@ function ChannelPlanner({ module }) {
     }
     return 'This plan reaches some people, but not enough kinds of people. Inclusive outreach usually depends on several complementary channels.';
   }, [submitted, missing.length, score]);
+
+  useEffect(() => {
+    if (submitted && missing.length === 0 && score >= 5 && onComplete) onComplete();
+  }, [submitted, missing.length, score, onComplete]);
 
   const toggle = (id) => {
     setSubmitted(false);
@@ -386,10 +408,10 @@ function ChannelPlanner({ module }) {
 
       <div className="d-flex flex-wrap gap-2 mb-4">
         <button type="button" className="filter-button active-action" onClick={() => setSubmitted(true)}>
-          Evaluate outreach stack
+          <Check size={15} /> Evaluate outreach stack
         </button>
         <button type="button" className="subtle-button" onClick={reset}>
-          Reset
+          <RotateCcw size={14} /> Reset
         </button>
       </div>
 
@@ -416,12 +438,12 @@ function ChannelPlanner({ module }) {
   );
 }
 
-function InteractiveModule({ module }) {
-  if (module.type === 'chat') return <ChatSimulation module={module} />;
-  if (module.type === 'trust') return <TrustBuilder module={module} />;
-  if (module.type === 'timeline') return <TimelineBuilder module={module} />;
-  if (module.type === 'power') return <PowerSorter module={module} />;
-  if (module.type === 'planner') return <ChannelPlanner module={module} />;
+function InteractiveModule({ module, onComplete }) {
+  if (module.type === 'chat') return <ChatSimulation module={module} onComplete={onComplete} />;
+  if (module.type === 'trust') return <TrustBuilder module={module} onComplete={onComplete} />;
+  if (module.type === 'timeline') return <TimelineBuilder module={module} onComplete={onComplete} />;
+  if (module.type === 'power') return <PowerSorter module={module} onComplete={onComplete} />;
+  if (module.type === 'planner') return <ChannelPlanner module={module} onComplete={onComplete} />;
   return null;
 }
 

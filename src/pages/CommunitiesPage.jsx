@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import PageIntro from '../components/PageIntro';
 import { audienceGuides, responsiblePractice, storyChapters } from '../data/siteData';
@@ -76,7 +77,9 @@ function CommunitiesPage() {
                     <div key={chapter.slug} className="evidence-card">
                       <p className="small-label mb-1">Chapter {chapter.step} · {chapter.city}</p>
                       <p className="mb-2 text-body-secondary">{chapter.subtitle}</p>
-                      <Link to={`/story/${chapter.slug}`} className="text-link">Open this chapter</Link>
+                      <Link to={`/story/${chapter.slug}`} className="text-link">
+                        Open this chapter <ArrowRight size={14} />
+                      </Link>
                     </div>
                   ))}
                 </div>

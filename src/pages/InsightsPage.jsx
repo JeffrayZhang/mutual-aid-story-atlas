@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react';
+import { ArrowRight, BookOpen } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import PageIntro from '../components/PageIntro';
-import { insightPanels } from '../data/siteData';
+import { furtherReading, insightPanels } from '../data/siteData';
 
 function InsightsPage() {
   const [activeId, setActiveId] = useState(insightPanels[0].id);
@@ -14,7 +15,7 @@ function InsightsPage() {
     <div>
       <PageIntro
         eyebrow="Key lessons"
-        title="How the story answers the project’s three research questions"
+        title="How the story answers the project's three research questions"
         intro="This page turns the journey into a clear argument. Instead of asking you to infer everything from the chapters alone, it gathers the strongest evidence from each stop and explains what the project shows about digital mutual aid, design, and reciprocity."
         note="Use this page when you want the website to read clearly as both a creative artifact and a research-based course project."
         noteTitle="When to use this page"
@@ -74,7 +75,9 @@ function InsightsPage() {
                     <div key={item.slug} className="evidence-card">
                       <p className="small-label mb-1">{item.title}</p>
                       <p className="mb-2 text-body-secondary">{item.text}</p>
-                      <Link to={`/story/${item.slug}`} className="text-link">Revisit this chapter</Link>
+                      <Link to={`/story/${item.slug}`} className="text-link">
+                        Revisit this chapter <ArrowRight size={14} />
+                      </Link>
                     </div>
                   ))}
                 </div>
@@ -101,6 +104,26 @@ function InsightsPage() {
                 The story map makes the questions easier to learn because the user does not only read answers. They move through scenes, make choices, test platform features, compare models of support, and then see those interactions translated into analysis.
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section-spacing">
+        <div className="paper-card">
+          <p className="eyebrow mb-3"><BookOpen size={14} /> Further reading</p>
+          <p className="text-body-secondary mb-4">
+            The following works informed the ideas explored in this project. They are included as entry points for further study, not as formal citations.
+          </p>
+          <div className="references-list">
+            {furtherReading.map((ref) => (
+              <div key={ref.id} className="reference-item">
+                <p className="mb-1">
+                  <strong>{ref.author}</strong> ({ref.year}). <em>{ref.title}</em>.{' '}
+                  {ref.publisher && <span>{ref.publisher}.</span>}
+                </p>
+                {ref.note && <p className="mb-0 text-body-secondary">{ref.note}</p>}
+              </div>
+            ))}
           </div>
         </div>
       </section>

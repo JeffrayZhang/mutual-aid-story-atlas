@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { Check } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { storyChapters } from '../data/siteData';
 
@@ -23,7 +24,7 @@ function buildRoutePath(chapters) {
     .join(' ');
 }
 
-function StoryRouteMap({ activeSlug = null, compact = false }) {
+function StoryRouteMap({ activeSlug = null, compact = false, visited = [], completed = [] }) {
   const routePath = buildRoutePath(storyChapters);
 
   return (
@@ -76,7 +77,7 @@ function StoryRouteMap({ activeSlug = null, compact = false }) {
 
           <path d={routePath} className="route-line-shadow" />
           <path d={routePath} className="route-line" />
-          <path d={routePath} className="route-line route-line-main" />
+          <path d={routePath} className="route-line route-line-main route-animated" />
 
           <text className="map-region-label" x="10" y="10">North America</text>
           <text className="map-region-label" x="22" y="47">South America</text>
@@ -86,21 +87,33 @@ function StoryRouteMap({ activeSlug = null, compact = false }) {
           <text className="map-region-label" x="82" y="50">Australia</text>
         </svg>
 
-        {storyChapters.map((chapter) => (
-          <Link
-            key={chapter.slug}
-            to={`/story/${chapter.slug}`}
-            className={`route-stop ${activeSlug === chapter.slug ? 'active' : ''}`}
-            style={{ left: `${chapter.map.x}%`, top: `${chapter.map.y}%` }}
-            aria-label={`Open chapter ${chapter.step}: ${chapter.city}`}
-          >
-            <span className="route-stop-dot">{chapter.step}</span>
-            <span className="route-stop-label">
-              <strong>{chapter.city}</strong>
-              <small>{chapter.country}</small>
-            </span>
-          </Link>
-        ))}
+        {storyChapters.map((chapter) => {
+          const isActive = activeSlug === chapter.slug;
+          const isCompleted = completed.includes(chapter.slug);
+          const isVisited = visited.includes(chapter.slug);
+          let stopClass = 'route-stop';
+          if (isActive) stopClass += ' active';
+          if (isCompleted) stopClass += ' completed';
+          else if (isVisited) stopClass += ' visited';
+
+          return (
+            <Link
+              key={chapter.slug}
+              to={`/story/${chapter.slug}`}
+              className={stopClass}
+              style={{ left: `${chapter.map.x}%`, top: `${chapter.map.y}%` }}
+              aria-label={`Open chapter ${chapter.step}: ${chapter.city}${isCompleted ? ' (completed)' : isVisited ? ' (visited)' : ''}`}
+            >
+              <span className="route-stop-dot">
+                {isCompleted ? <Check size={14} strokeWidth={3} /> : chapter.step}
+              </span>
+              <span className="route-stop-label">
+                <strong>{chapter.city}</strong>
+                <small>{chapter.country}</small>
+              </span>
+            </Link>
+          );
+        })}
       </div>
 
       <figcaption className="route-map-caption">
@@ -116,16 +129,27 @@ function StoryRouteMap({ activeSlug = null, compact = false }) {
         </div>
 
         <div className="route-stop-list">
-          {storyChapters.map((chapter) => (
-            <Link
-              key={`${chapter.slug}-list`}
-              to={`/story/${chapter.slug}`}
-              className={`route-stop-list-link ${activeSlug === chapter.slug ? 'active' : ''}`}
-            >
-              <span className="route-stop-list-index">{chapter.step}</span>
-              {chapter.city}
-            </Link>
-          ))}
+          {storyChapters.map((chapter) => {
+            const isCompleted = completed.includes(chapter.slug);
+            const isVisited = visited.includes(chapter.slug);
+            let linkClass = 'route-stop-list-link';
+            if (activeSlug === chapter.slug) linkClass += ' active';
+            if (isCompleted) linkClass += ' completed';
+            else if (isVisited) linkClass += ' visited';
+
+            return (
+              <Link
+                key={`${chapter.slug}-list`}
+                to={`/story/${chapter.slug}`}
+                className={linkClass}
+              >
+                <span className="route-stop-list-index">
+                  {isCompleted ? <Check size={10} strokeWidth={3} /> : chapter.step}
+                </span>
+                {chapter.city}
+              </Link>
+            );
+          })}
         </div>
       </figcaption>
     </motion.figure>

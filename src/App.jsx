@@ -1,11 +1,12 @@
 import { Suspense, lazy } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import SiteLayout from './components/SiteLayout';
 
 const ChapterPage = lazy(() => import('./pages/ChapterPage'));
 const CommunitiesPage = lazy(() => import('./pages/CommunitiesPage'));
 const HomePage = lazy(() => import('./pages/HomePage'));
 const InsightsPage = lazy(() => import('./pages/InsightsPage'));
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 const StoryMapPage = lazy(() => import('./pages/StoryMapPage'));
 
 function RouteLoadingFallback() {
@@ -34,7 +35,7 @@ function App() {
         <Route path="/story/:slug" element={withSuspense(<ChapterPage />)} />
         <Route path="/learn" element={withSuspense(<InsightsPage />)} />
         <Route path="/communities" element={withSuspense(<CommunitiesPage />)} />
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={withSuspense(<NotFoundPage />)} />
       </Route>
     </Routes>
   );
