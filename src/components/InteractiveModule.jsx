@@ -30,7 +30,7 @@ function ChatSimulation({ module, onComplete }) {
   const round = module.rounds[roundIndex];
 
   useEffect(() => {
-    if (complete && onComplete) onComplete();
+    if (complete && onComplete) onComplete(100);
   }, [complete, onComplete]);
 
   const handleChoice = (choice) => {
@@ -115,7 +115,7 @@ function TrustBuilder({ module, onComplete }) {
   }, [submitted, score, missingThemes.length]);
 
   useEffect(() => {
-    if (submitted && score >= 7 && onComplete) onComplete();
+    if (submitted && score >= 7 && onComplete) onComplete(Math.round((score / 8) * 100));
   }, [submitted, score, onComplete]);
 
   const toggle = (id) => {
@@ -196,7 +196,7 @@ function TimelineBuilder({ module, onComplete }) {
     selected.every((event, index) => event.id === module.events[index].id);
 
   useEffect(() => {
-    if (correct && onComplete) onComplete();
+    if (correct && onComplete) onComplete(100);
   }, [correct, onComplete]);
 
   const pick = (event) => {
@@ -286,7 +286,7 @@ function PowerSorter({ module, onComplete }) {
   const allAnswered = answeredCount === module.cards.length;
 
   useEffect(() => {
-    if (allAnswered && score === module.cards.length && onComplete) onComplete();
+    if (allAnswered && score === module.cards.length && onComplete) onComplete(Math.round((score / module.cards.length) * 100));
   }, [allAnswered, score, module.cards.length, onComplete]);
 
   const choose = (cardId, value) => {
@@ -370,8 +370,10 @@ function ChannelPlanner({ module, onComplete }) {
   }, [submitted, missing.length, score]);
 
   useEffect(() => {
-    if (submitted && missing.length === 0 && score >= 5 && onComplete) onComplete();
-  }, [submitted, missing.length, score, onComplete]);
+    if (submitted && missing.length === 0 && score >= 5 && onComplete) {
+      onComplete(Math.round(((covered.length / module.idealTags.length) * 50 + (score / 6) * 50)));
+    }
+  }, [submitted, missing.length, score, covered.length, module.idealTags.length, onComplete]);
 
   const toggle = (id) => {
     setSubmitted(false);

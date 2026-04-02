@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { ChevronUp, Menu, Moon, Sun, X } from 'lucide-react';
+import { achievements as allAchievements } from '../data/achievements';
+import { useProgress } from '../hooks/useProgress';
+import AchievementToastHost from './AchievementToast';
 
 function ScrollToTop() {
   const location = useLocation();
@@ -35,6 +38,7 @@ function BackToTop() {
 }
 
 function SiteLayout() {
+  const { newAchievements, acknowledgeAchievement } = useProgress();
   const [navOpen, setNavOpen] = useState(false);
   const [theme, setTheme] = useState(() => {
     try {
@@ -170,6 +174,11 @@ function SiteLayout() {
       </footer>
 
       <BackToTop />
+      <AchievementToastHost
+        newAchievements={newAchievements}
+        onAcknowledge={acknowledgeAchievement}
+        allAchievements={allAchievements}
+      />
     </div>
   );
 }

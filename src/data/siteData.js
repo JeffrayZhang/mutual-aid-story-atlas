@@ -35,7 +35,7 @@ export const storyChapters = [
     city: 'Toronto',
     country: 'Canada',
     region: 'North America',
-    map: { x: 18, y: 24 },
+    map: { x: 27, y: 23 },
     title: 'The first message',
     subtitle: 'A weekend food gap becomes a community signal.',
     need: 'Mina needs food before the weekend after her part-time shift is cut.',
@@ -168,7 +168,7 @@ export const storyChapters = [
     city: 'São Paulo',
     country: 'Brazil',
     region: 'South America',
-    map: { x: 30, y: 72 },
+    map: { x: 34, y: 72 },
     title: 'Stories, sheets, and shared routes',
     subtitle: 'Community care becomes visible when coordination is public enough to join.',
     need:
@@ -245,7 +245,7 @@ export const storyChapters = [
     city: 'Warsaw',
     country: 'Poland',
     region: 'Europe',
-    map: { x: 50, y: 20 },
+    map: { x: 53, y: 19 },
     title: 'Translation before intake',
     subtitle: 'Trust grows when a platform explains itself clearly and respects vulnerability.',
     need:
@@ -363,7 +363,7 @@ export const storyChapters = [
     city: 'Nairobi',
     country: 'Kenya',
     region: 'Africa',
-    map: { x: 55, y: 44 },
+    map: { x: 57, y: 50 },
     title: 'Who gets to decide?',
     subtitle: 'Power looks different when support is reciprocal instead of one-directional.',
     need:
@@ -463,7 +463,7 @@ export const storyChapters = [
     city: 'Manila',
     country: 'Philippines',
     region: 'Asia',
-    map: { x: 80, y: 46 },
+    map: { x: 82, y: 43 },
     title: 'Designing for the next storm',
     subtitle: 'Inclusion means building a communication stack that more than one kind of user can enter.',
     need:

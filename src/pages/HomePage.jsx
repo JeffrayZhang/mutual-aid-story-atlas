@@ -1,13 +1,15 @@
 import { motion } from 'framer-motion';
 import { ArrowRight, Check } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import AchievementPanel from '../components/AchievementPanel';
 import PageIntro from '../components/PageIntro';
+import ProgressBar from '../components/ProgressBar';
 import StoryRouteMap from '../components/StoryRouteMap';
 import { coreQuestions, storyChapters, storyIntro } from '../data/siteData';
 import { useProgress } from '../hooks/useProgress';
 
 function HomePage() {
-  const { visited, completed } = useProgress();
+  const { visited, completed, scores, achievements, totalXP } = useProgress();
   const totalCompleted = completed.length;
 
   return (
@@ -24,7 +26,7 @@ function HomePage() {
         ]}
         stats={[
           { value: '5', label: 'city chapters' },
-          { value: '5', label: 'interactive scenes' },
+          { value: `${totalXP}`, label: 'total XP' },
           { value: '3', label: 'research questions' },
         ]}
       />
@@ -49,10 +51,9 @@ function HomePage() {
             <div className="paper-card h-100 subdued-panel">
               <p className="eyebrow mb-3">What to do next</p>
 
+              <ProgressBar visited={visited} completed={completed} />
               {totalCompleted > 0 && (
-                <div className="progress-banner mb-3">
-                  <Check size={16} /> {totalCompleted} of 5 chapters completed
-                </div>
+                <p className="progress-label mt-2 mb-0">{totalCompleted} of 5 chapters completed</p>
               )}
 
               <div className="journey-checklist mb-4">
@@ -112,6 +113,8 @@ function HomePage() {
           ))}
         </div>
       </section>
+
+      <AchievementPanel earned={achievements} />
 
       <section className="section-spacing">
         <div className="section-heading-row">

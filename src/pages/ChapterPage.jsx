@@ -1,9 +1,12 @@
 import { motion } from 'framer-motion';
 import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
+import Confetti from '../components/Confetti';
 import InteractiveModule from '../components/InteractiveModule';
 import PageIntro from '../components/PageIntro';
+import ProgressBar from '../components/ProgressBar';
+import ScoreBadge from '../components/ScoreBadge';
 import StoryRouteMap from '../components/StoryRouteMap';
 import { coreQuestions, storyChapters } from '../data/siteData';
 import { useProgress } from '../hooks/useProgress';
@@ -11,26 +14,30 @@ import { useProgress } from '../hooks/useProgress';
 function ChapterPage() {
   const { slug } = useParams();
   const chapterIndex = storyChapters.findIndex((chapter) => chapter.slug === slug);
-  const { visited, completed, markVisited, markCompleted } = useProgress();
+  const { visited, completed, scores, markVisited, markScore } = useProgress();
+  const [showConfetti, setShowConfetti] = useState(false);
 
   useEffect(() => {
-    if (slug && chapterIndex !== -1) {
-      markVisited(slug);
-    }
+    if (slug && chapterIndex !== -1) markVisited(slug);
   }, [slug, chapterIndex, markVisited]);
 
-  const handleModuleComplete = useCallback(() => {
-    if (slug) markCompleted(slug);
-  }, [slug, markCompleted]);
+  const handleModuleComplete = useCallback(
+    (score) => {
+      if (slug) {
+        markScore(slug, score ?? 100);
+        setShowConfetti(true);
+      }
+    },
+    [slug, markScore],
+  );
 
-  if (chapterIndex === -1) {
-    return <Navigate to="/story-map" replace />;
-  }
+  if (chapterIndex === -1) return <Navigate to="/story-map" replace />;
 
   const chapter = storyChapters[chapterIndex];
   const previousChapter = storyChapters[chapterIndex - 1] ?? null;
   const nextChapter = storyChapters[chapterIndex + 1] ?? null;
   const isCompleted = completed.includes(chapter.slug);
+  const chapterScore = scores[chapter.slug];
   const moduleTypeLabels = {
     chat: 'Chat scene',
     timeline: 'Timeline build',
@@ -41,6 +48,8 @@ function ChapterPage() {
 
   return (
     <div>
+      {showConfetti && <Confetti onDone={() => setShowConfetti(false)} />}
+
       <PageIntro
         eyebrow={`Chapter ${chapter.step} · ${chapter.city}, ${chapter.country}`}
         title={chapter.title}
@@ -72,18 +81,16 @@ function ChapterPage() {
             </Link>
           </div>
           <StoryRouteMap activeSlug={chapter.slug} compact visited={visited} completed={completed} />
+          <div className="mt-3">
+            <ProgressBar visited={visited} completed={completed} />
+          </div>
         </div>
       </section>
 
       <section className="section-spacing">
         <div className="row g-4 align-items-start">
           <div className="col-lg-5">
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.35 }}
-              className="paper-card mb-4"
-            >
+            <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }} className="paper-card mb-4">
               <p className="eyebrow mb-3">Narrative stop</p>
               <div className="reading-width chapter-reading">
                 {chapter.story.map((paragraph) => (
@@ -106,15 +113,13 @@ function ChapterPage() {
           </div>
 
           <div className="col-lg-7">
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.35, delay: 0.05 }}
-              className="paper-card h-100"
-            >
+            <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, delay: 0.05 }} className="paper-card h-100">
               <div className="d-flex justify-content-between align-items-center mb-0">
                 <p className="eyebrow mb-3">Interactive chapter</p>
-                {isCompleted && <span className="done-badge mb-3"><Check size={12} /> Completed</span>}
+                <div className="d-flex gap-2 mb-3">
+                  <ScoreBadge score={chapterScore} />
+                  {isCompleted && <span className="done-badge"><Check size={12} /> Completed</span>}
+                </div>
               </div>
               <InteractiveModule key={chapter.slug} module={chapter.module} onComplete={handleModuleComplete} />
             </motion.div>

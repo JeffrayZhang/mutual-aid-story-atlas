@@ -2,12 +2,14 @@ import { motion } from 'framer-motion';
 import { ArrowRight, Check, RotateCcw } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import PageIntro from '../components/PageIntro';
+import ProgressBar from '../components/ProgressBar';
+import ScoreBadge from '../components/ScoreBadge';
 import StoryRouteMap from '../components/StoryRouteMap';
 import { storyChapters } from '../data/siteData';
 import { useProgress } from '../hooks/useProgress';
 
 function StoryMapPage() {
-  const { visited, completed, reset } = useProgress();
+  const { visited, completed, scores, reset } = useProgress();
   const totalCompleted = completed.length;
 
   return (
@@ -48,6 +50,9 @@ function StoryMapPage() {
             </div>
           </div>
           <StoryRouteMap visited={visited} completed={completed} />
+          <div className="mt-3">
+            <ProgressBar visited={visited} completed={completed} />
+          </div>
         </div>
       </section>
 
@@ -69,6 +74,7 @@ function StoryMapPage() {
                     <div>
                       <div className="d-flex align-items-center gap-2 mb-2">
                         <p className="small-label mb-0">Chapter {chapter.step} · {chapter.city}, {chapter.country}</p>
+                        <ScoreBadge score={scores[chapter.slug]} />
                         {isDone && <span className="done-badge"><Check size={12} /> Done</span>}
                         {!isDone && isSeen && <span className="seen-badge">Visited</span>}
                       </div>
