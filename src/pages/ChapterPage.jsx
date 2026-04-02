@@ -1,0 +1,146 @@
+import { motion } from 'framer-motion';
+import { Link, Navigate, useParams } from 'react-router-dom';
+import InteractiveModule from '../components/InteractiveModule';
+import PageIntro from '../components/PageIntro';
+import StoryRouteMap from '../components/StoryRouteMap';
+import { coreQuestions, storyChapters } from '../data/siteData';
+
+function ChapterPage() {
+  const { slug } = useParams();
+  const chapterIndex = storyChapters.findIndex((chapter) => chapter.slug === slug);
+
+  if (chapterIndex === -1) {
+    return <Navigate to="/story-map" replace />;
+  }
+
+  const chapter = storyChapters[chapterIndex];
+  const previousChapter = storyChapters[chapterIndex - 1] ?? null;
+  const nextChapter = storyChapters[chapterIndex + 1] ?? null;
+
+  return (
+    <div>
+      <PageIntro
+        eyebrow={`Chapter ${chapter.step} · ${chapter.city}, ${chapter.country}`}
+        title={chapter.title}
+        intro={chapter.hook}
+        note={chapter.need}
+      />
+
+      <section className="section-spacing">
+        <div className="paper-card atlas-panel">
+          <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+            <div>
+              <p className="eyebrow mb-2">Story progress</p>
+              <h2 className="section-title mb-0">Where Mina is in the atlas</h2>
+            </div>
+            <Link to="/story-map" className="text-link">
+              Back to full route
+            </Link>
+          </div>
+          <StoryRouteMap activeSlug={chapter.slug} compact />
+        </div>
+      </section>
+
+      <section className="section-spacing">
+        <div className="row g-4 align-items-start">
+          <div className="col-lg-5">
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35 }}
+              className="paper-card mb-4"
+            >
+              <p className="eyebrow mb-3">Narrative stop</p>
+              <div className="reading-width chapter-reading">
+                {chapter.story.map((paragraph) => (
+                  <p key={paragraph}>{paragraph}</p>
+                ))}
+              </div>
+            </motion.div>
+
+            <div className="paper-card">
+              <p className="eyebrow mb-3">What this stop teaches</p>
+              <div className="vstack gap-3">
+                {chapter.takeawayCards.map((item) => (
+                  <div key={item.label} className="lesson-strip">
+                    <p className="small-label mb-1">{item.label}</p>
+                    <p className="mb-0 text-body-secondary">{item.text}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="col-lg-7">
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35, delay: 0.05 }}
+              className="paper-card h-100"
+            >
+              <p className="eyebrow mb-3">Interactive chapter</p>
+              <InteractiveModule key={chapter.slug} module={chapter.module} />
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section-spacing">
+        <div className="paper-card">
+          <p className="eyebrow mb-3">Question connections</p>
+          <div className="row g-4">
+            {coreQuestions
+              .filter((question) => chapter.chapterLinks.includes(question.id))
+              .map((question) => (
+                <div className="col-md-6 col-xl-4" key={question.id}>
+                  <div className="question-link-card h-100">
+                    <p className="small-label mb-2">{question.id.toUpperCase()}</p>
+                    <h3 className="card-title mb-2">{question.short}</h3>
+                    <p className="mb-0 text-body-secondary">This chapter contributes evidence for this question.</p>
+                  </div>
+                </div>
+              ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section-spacing">
+        <div className="paper-card navigator-card">
+          <div className="row g-4 align-items-center">
+            <div className="col-md-4">
+              {previousChapter ? (
+                <Link to={`/story/${previousChapter.slug}`} className="nav-arrow-link">
+                  <span className="small-label d-block mb-1">Previous</span>
+                  <strong>Chapter {previousChapter.step}: {previousChapter.city}</strong>
+                </Link>
+              ) : (
+                <Link to="/" className="nav-arrow-link muted">
+                  <span className="small-label d-block mb-1">Previous</span>
+                  <strong>Return to prelude</strong>
+                </Link>
+              )}
+            </div>
+            <div className="col-md-4 text-md-center">
+              <Link to="/learn" className="text-link">Go to the learning page</Link>
+            </div>
+            <div className="col-md-4 text-md-end">
+              {nextChapter ? (
+                <Link to={`/story/${nextChapter.slug}`} className="nav-arrow-link text-md-end">
+                  <span className="small-label d-block mb-1">Next</span>
+                  <strong>Chapter {nextChapter.step}: {nextChapter.city}</strong>
+                </Link>
+              ) : (
+                <Link to="/communities" className="nav-arrow-link text-md-end">
+                  <span className="small-label d-block mb-1">Next</span>
+                  <strong>Finish with community uses</strong>
+                </Link>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+export default ChapterPage;
