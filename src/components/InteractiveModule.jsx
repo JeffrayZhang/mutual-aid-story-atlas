@@ -51,7 +51,7 @@ function ChatSimulation({ module }) {
 
   return (
     <ModuleFrame title={module.title} description={module.description}>
-      <div className="message-log mb-4">
+      <div className="message-log mb-4" role="log" aria-live="polite">
         {log.map((entry, index) => (
           <div key={`${entry.speaker}-${index}`} className={`message-row ${entry.kind}`}>
             <span className="message-speaker">{entry.speaker}</span>
@@ -62,6 +62,7 @@ function ChatSimulation({ module }) {
 
       {!complete ? (
         <div className="choice-panel">
+          <p className="selection-summary">Scene {roundIndex + 1} of {module.rounds.length}</p>
           <p className="small-label mb-2">Prompt</p>
           <p className="mb-3">{round.prompt}</p>
           <div className="choice-grid">
@@ -73,7 +74,7 @@ function ChatSimulation({ module }) {
           </div>
         </div>
       ) : (
-        <div className="result-panel success">
+        <div className="result-panel success" role="status" aria-live="polite">
           <p className="small-label mb-2">Chapter takeaway</p>
           <p className="mb-3">{module.completion}</p>
           <button type="button" className="subtle-button" onClick={reset}>
@@ -95,6 +96,7 @@ function TrustBuilder({ module }) {
   );
   const missingThemes = Object.keys(module.themeLabels).filter((theme) => !coveredThemes.includes(theme));
   const score = selectedOptions.reduce((sum, option) => sum + option.points, 0);
+  const atLimit = selected.length >= module.maxSelect;
 
   const summary = useMemo(() => {
     if (!submitted) return '';
@@ -124,6 +126,7 @@ function TrustBuilder({ module }) {
   return (
     <ModuleFrame title={module.title} description={module.description}>
       <p className="small-label mb-2">Choose up to {module.maxSelect}</p>
+      <p className="selection-summary">Selected {selected.length} of {module.maxSelect}</p>
       <div className="option-grid mb-4">
         {module.options.map((option) => (
           <button
@@ -131,6 +134,8 @@ function TrustBuilder({ module }) {
             type="button"
             className={`option-tile ${selected.includes(option.id) ? 'active' : ''}`}
             onClick={() => toggle(option.id)}
+            aria-pressed={selected.includes(option.id)}
+            disabled={atLimit && !selected.includes(option.id)}
           >
             {option.label}
           </button>
@@ -147,7 +152,7 @@ function TrustBuilder({ module }) {
       </div>
 
       {submitted ? (
-        <div className="result-panel">
+        <div className="result-panel" role="status" aria-live="polite">
           <p className="mb-2"><strong>Result:</strong> {summary}</p>
           <p className="mb-3 text-body-secondary">
             {missingThemes.length > 0
@@ -198,6 +203,7 @@ function TimelineBuilder({ module }) {
   return (
     <ModuleFrame title={module.title} description={module.description}>
       <p className="small-label mb-2">Step 1: build the order</p>
+      <p className="selection-summary">Placed {selected.length} of {module.events.length} events</p>
       <div className="timeline-pool mb-4">
         {pool.map((event) => (
           <button
@@ -247,7 +253,7 @@ function TimelineBuilder({ module }) {
       </div>
 
       {checked ? (
-        <div className={`result-panel mt-4 ${correct ? 'success' : ''}`}>
+        <div className={`result-panel mt-4 ${correct ? 'success' : ''}`} role="status" aria-live="polite">
           <p className="mb-2">
             <strong>{correct ? 'Nicely sequenced.' : 'Almost there.'}</strong>{' '}
             {correct
@@ -288,13 +294,14 @@ function PowerSorter({ module }) {
                     type="button"
                     className={`mini-choice ${picked === choice.id ? 'active' : ''}`}
                     onClick={() => choose(card.id, choice.id)}
+                    aria-pressed={picked === choice.id}
                   >
                     {choice.label}
                   </button>
                 ))}
               </div>
               {showFeedback ? (
-                <div className={`feedback-inline ${correct ? 'success' : 'warning'}`}>
+                <div className={`feedback-inline ${correct ? 'success' : 'warning'}`} role="status" aria-live="polite">
                   <p className="small-label mb-1">{correct ? 'Why this fits' : 'Look again'}</p>
                   <p className="mb-0 text-body-secondary">{card.explanation}</p>
                 </div>
@@ -315,7 +322,7 @@ function PowerSorter({ module }) {
       </div>
 
       {answeredCount === module.cards.length ? (
-        <div className="result-panel mt-4 success">
+        <div className="result-panel mt-4 success" role="status" aria-live="polite">
           <p className="mb-0">{module.completion}</p>
         </div>
       ) : null}
@@ -331,6 +338,7 @@ function ChannelPlanner({ module }) {
   const covered = Array.from(new Set(selectedOptions.flatMap((option) => option.tags)));
   const missing = module.idealTags.filter((tag) => !covered.includes(tag));
   const score = selectedOptions.reduce((sum, option) => sum + option.points, 0);
+  const atLimit = selected.length >= module.maxSelect;
 
   const summary = useMemo(() => {
     if (!submitted) return '';
@@ -360,6 +368,7 @@ function ChannelPlanner({ module }) {
   return (
     <ModuleFrame title={module.title} description={module.description}>
       <p className="small-label mb-2">Choose {module.maxSelect} channels</p>
+      <p className="selection-summary">Selected {selected.length} of {module.maxSelect}</p>
       <div className="option-grid mb-4">
         {module.options.map((option) => (
           <button
@@ -367,6 +376,8 @@ function ChannelPlanner({ module }) {
             type="button"
             className={`option-tile ${selected.includes(option.id) ? 'active' : ''}`}
             onClick={() => toggle(option.id)}
+            aria-pressed={selected.includes(option.id)}
+            disabled={atLimit && !selected.includes(option.id)}
           >
             {option.label}
           </button>
@@ -383,7 +394,7 @@ function ChannelPlanner({ module }) {
       </div>
 
       {submitted ? (
-        <div className="result-panel">
+        <div className="result-panel" role="status" aria-live="polite">
           <p className="mb-2"><strong>Result:</strong> {summary}</p>
           <p className="mb-3 text-body-secondary">
             {missing.length > 0

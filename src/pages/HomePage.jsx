@@ -8,10 +8,20 @@ function HomePage() {
   return (
     <div>
       <PageIntro
-        eyebrow="Prelude"
-        title="Following one request for care across a global story map"
-        intro="This website follows Mina, a fictional composite character, as she moves through different cities and encounters different mutual aid networks. Each stop is a chapter. Each chapter includes an interactive scene. Together, they answer what digital mutual aid does, what makes it trustworthy and inclusive, and how it differs from charity or institutional support."
+        eyebrow="Mutual Aid Story Atlas"
+        title="How digital mutual aid turns simple tools into community care"
+        intro="Follow Mina, a fictional composite character, across five cities to see how chats, maps, volunteer sheets, and low-bandwidth communication can support care, trust, and participation. Each stop is a chapter with an interactive scene, and together they answer the project’s three research questions."
         note={storyIntro.note}
+        noteTitle="Why Mina is fictional"
+        actions={[
+          { to: '/story/toronto', label: 'Start Mina’s journey' },
+          { to: '/story-map', label: 'Explore the full route', variant: 'secondary' },
+        ]}
+        stats={[
+          { value: '5', label: 'city chapters' },
+          { value: '5', label: 'interactive scenes' },
+          { value: '3', label: 'research questions' },
+        ]}
       />
 
       <section className="section-spacing">
@@ -32,15 +42,33 @@ function HomePage() {
           </div>
           <div className="col-lg-5">
             <div className="paper-card h-100 subdued-panel">
-              <p className="eyebrow mb-3">How to read the site</p>
-              <div className="reading-width">
-                <p>
-                  This project is not a generic world tour. The journey is a storytelling frame that lets the user compare how similar needs are met differently across local contexts. Each chapter is designed to teach something specific about digital citizenship and mutual aid.
-                </p>
-                <p className="mb-0">
-                  The site works best in order: begin with the story map, move through the chapters, then end on the learning and community pages to see the questions answered directly.
-                </p>
+              <p className="eyebrow mb-3">What to do next</p>
+              <div className="journey-checklist mb-4">
+                <div className="checklist-item">
+                  <span className="checklist-number">1</span>
+                  <div>
+                    <p className="mb-1"><strong>Scan the route first.</strong></p>
+                    <p>Use the map to see the full journey and understand how the chapters connect.</p>
+                  </div>
+                </div>
+                <div className="checklist-item">
+                  <span className="checklist-number">2</span>
+                  <div>
+                    <p className="mb-1"><strong>Open each city in order.</strong></p>
+                    <p>Every chapter adds one new idea about mutual aid, platform trust, or reciprocity.</p>
+                  </div>
+                </div>
+                <div className="checklist-item">
+                  <span className="checklist-number">3</span>
+                  <div>
+                    <p className="mb-1"><strong>Finish with the analysis pages.</strong></p>
+                    <p>The learning and community sections turn the journey into clear takeaways you can reuse.</p>
+                  </div>
+                </div>
               </div>
+              <Link to="/story-map" className="secondary-link-button">
+                View the full story map
+              </Link>
             </div>
           </div>
         </div>
@@ -127,7 +155,7 @@ function HomePage() {
                 <li>Visit the learning page</li>
                 <li>End on the audience page</li>
               </ul>
-              <Link to="/story-map" className="text-link">Go to the full story map</Link>
+              <Link to="/story-map" className="primary-link-button">Go to the full story map</Link>
             </div>
           </div>
         </div>

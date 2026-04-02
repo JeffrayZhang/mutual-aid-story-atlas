@@ -9,9 +9,19 @@ function StoryMapPage() {
     <div>
       <PageIntro
         eyebrow="Story map"
-        title="The route Mina follows"
-        intro="This page acts as the atlas for the whole website. Each chapter is a stop in Mina’s journey and a lesson about digital mutual aid. The map and cards are linked, so the user can move visually, linearly, or by topic without breaking the story."
-        note="Every stop includes a different interactive mode: chat simulation, response timeline, trust-building game, power sorter, and outreach planner."
+        title="Follow the full route before you dive into the chapters"
+        intro="This atlas shows Mina’s five-stop journey at a glance. Use the map for spatial context, the stop list for quick access, or the chapter cards below for more detail about what each city teaches."
+        note="Each chapter keeps the same structure: context first, interaction second, then a direct link to the next step in the story."
+        noteTitle="How to use this page"
+        actions={[
+          { to: '/story/toronto', label: 'Begin with chapter 1' },
+          { to: '/learn', label: 'Jump to the key lessons', variant: 'secondary' },
+        ]}
+        stats={[
+          { value: '5', label: 'connected stops' },
+          { value: '1', label: 'continuous route' },
+          { value: '3', label: 'guiding questions' },
+        ]}
       />
 
       <section className="section-spacing">

@@ -16,6 +16,13 @@ function ChapterPage() {
   const chapter = storyChapters[chapterIndex];
   const previousChapter = storyChapters[chapterIndex - 1] ?? null;
   const nextChapter = storyChapters[chapterIndex + 1] ?? null;
+  const moduleTypeLabels = {
+    chat: 'Chat scene',
+    timeline: 'Timeline build',
+    trust: 'Trust signals',
+    power: 'Power sort',
+    planner: 'Outreach stack',
+  };
 
   return (
     <div>
@@ -24,6 +31,18 @@ function ChapterPage() {
         title={chapter.title}
         intro={chapter.hook}
         note={chapter.need}
+        noteTitle="Immediate need"
+        actions={[
+          { to: '/story-map', label: 'View the full route', variant: 'secondary' },
+          nextChapter
+            ? { to: `/story/${nextChapter.slug}`, label: `Next: ${nextChapter.city}` }
+            : { to: '/learn', label: 'Finish with the key lessons' },
+        ]}
+        stats={[
+          { value: chapter.region, label: 'region' },
+          { value: moduleTypeLabels[chapter.module.type], label: 'interactive mode' },
+          { value: chapter.chapterLinks.map((link) => link.toUpperCase()).join(' · '), label: 'linked questions' },
+        ]}
       />
 
       <section className="section-spacing">

@@ -1,20 +1,39 @@
+import { Suspense, lazy } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import SiteLayout from './components/SiteLayout';
-import ChapterPage from './pages/ChapterPage';
-import CommunitiesPage from './pages/CommunitiesPage';
-import HomePage from './pages/HomePage';
-import InsightsPage from './pages/InsightsPage';
-import StoryMapPage from './pages/StoryMapPage';
+
+const ChapterPage = lazy(() => import('./pages/ChapterPage'));
+const CommunitiesPage = lazy(() => import('./pages/CommunitiesPage'));
+const HomePage = lazy(() => import('./pages/HomePage'));
+const InsightsPage = lazy(() => import('./pages/InsightsPage'));
+const StoryMapPage = lazy(() => import('./pages/StoryMapPage'));
+
+function RouteLoadingFallback() {
+  return (
+    <section className="route-loading paper-card" role="status" aria-live="polite">
+      <p className="eyebrow mb-0">Loading next section</p>
+      <h1 className="section-title mb-0">Preparing the story atlas…</h1>
+      <p className="text-body-secondary mb-0 reading-width">
+        This project loads pages in smaller chunks so the first visit stays faster on slower connections.
+      </p>
+      <div className="loading-pulse" aria-hidden="true" />
+    </section>
+  );
+}
+
+function withSuspense(element) {
+  return <Suspense fallback={<RouteLoadingFallback />}>{element}</Suspense>;
+}
 
 function App() {
   return (
     <Routes>
       <Route element={<SiteLayout />}>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/story-map" element={<StoryMapPage />} />
-        <Route path="/story/:slug" element={<ChapterPage />} />
-        <Route path="/learn" element={<InsightsPage />} />
-        <Route path="/communities" element={<CommunitiesPage />} />
+        <Route path="/" element={withSuspense(<HomePage />)} />
+        <Route path="/story-map" element={withSuspense(<StoryMapPage />)} />
+        <Route path="/story/:slug" element={withSuspense(<ChapterPage />)} />
+        <Route path="/learn" element={withSuspense(<InsightsPage />)} />
+        <Route path="/communities" element={withSuspense(<CommunitiesPage />)} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>

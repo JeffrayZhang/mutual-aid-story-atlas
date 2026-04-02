@@ -13,19 +13,34 @@ function InsightsPage() {
   return (
     <div>
       <PageIntro
-        eyebrow="What it teaches"
-        title="How the story answers the three research questions"
-        intro="This page turns the chapters into direct answers. Instead of leaving the user to infer the meaning of the story map alone, it gathers the evidence from each stop and explains what the project reveals about digital mutual aid, platform design, and reciprocity."
-        note="Use this page if you want the website to read clearly as both a creative artifact and a research-based course project."
+        eyebrow="Key lessons"
+        title="How the story answers the project’s three research questions"
+        intro="This page turns the journey into a clear argument. Instead of asking you to infer everything from the chapters alone, it gathers the strongest evidence from each stop and explains what the project shows about digital mutual aid, design, and reciprocity."
+        note="Use this page when you want the website to read clearly as both a creative artifact and a research-based course project."
+        noteTitle="When to use this page"
+        actions={[
+          { to: '/communities', label: 'See community uses' },
+          { to: '/story-map', label: 'Revisit the route', variant: 'secondary' },
+        ]}
+        stats={[
+          { value: '3', label: 'research questions' },
+          { value: '5', label: 'evidence-rich chapters' },
+          { value: '1', label: 'core argument' },
+        ]}
       />
 
       <section className="section-spacing">
         <div className="paper-card">
-          <div className="d-flex flex-wrap gap-2 mb-4">
+          <div className="d-flex flex-wrap gap-2 mb-4" role="tablist" aria-label="Research question panels">
             {insightPanels.map((item) => (
               <button
                 key={item.id}
                 type="button"
+                role="tab"
+                id={`insight-tab-${item.id}`}
+                aria-controls="insight-panel"
+                aria-selected={activeId === item.id}
+                tabIndex={activeId === item.id ? 0 : -1}
                 onClick={() => setActiveId(item.id)}
                 className={`filter-button secondary ${activeId === item.id ? 'active' : ''}`}
               >
@@ -34,7 +49,12 @@ function InsightsPage() {
             ))}
           </div>
 
-          <div className="row g-4 align-items-start">
+          <div
+            className="row g-4 align-items-start"
+            id="insight-panel"
+            role="tabpanel"
+            aria-labelledby={`insight-tab-${panel.id}`}
+          >
             <div className="col-lg-7">
               <h2 className="section-title mb-3">{panel.title}</h2>
               <p className="mb-4 text-body-secondary">{panel.answer}</p>
