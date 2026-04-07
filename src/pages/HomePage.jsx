@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ArrowRight, Check } from 'lucide-react';
+import { ArrowRight, Check, RotateCcw } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import AchievementPanel from '../components/AchievementPanel';
 import AnimatedCounter from '../components/AnimatedCounter';
@@ -10,7 +10,7 @@ import { coreQuestions, storyChapters, storyIntro } from '../data/siteData';
 import { useProgress } from '../hooks/useProgress';
 
 function HomePage() {
-  const { visited, completed, scores, achievements, totalXP } = useProgress();
+  const { visited, completed, scores, achievements, totalXP, reset } = useProgress();
   const totalCompleted = completed.length;
 
   return (
@@ -41,9 +41,16 @@ function HomePage() {
                   <p className="eyebrow mb-2">The route</p>
                   <h2 className="section-title mb-0">Five stops, one connected lesson</h2>
                 </div>
-                <Link to="/story/toronto" className="primary-link-button">
-                  Start Mina's journey <ArrowRight size={16} />
-                </Link>
+                <div className="d-flex flex-wrap gap-2">
+                  {totalCompleted > 0 && (
+                    <button type="button" className="subtle-button" onClick={reset}>
+                      <RotateCcw size={14} /> Reset journey
+                    </button>
+                  )}
+                  <Link to="/story/toronto" className="primary-link-button">
+                    Start Mina's journey <ArrowRight size={16} />
+                  </Link>
+                </div>
               </div>
               <StoryRouteMap visited={visited} completed={completed} />
             </div>
