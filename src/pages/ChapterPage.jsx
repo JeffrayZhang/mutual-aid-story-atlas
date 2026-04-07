@@ -7,7 +7,7 @@ import InteractiveModule from '../components/InteractiveModule';
 import PageIntro from '../components/PageIntro';
 import ProgressBar from '../components/ProgressBar';
 import ScoreBadge from '../components/ScoreBadge';
-import StoryRouteMap from '../components/StoryRouteMap';
+import JourneyPath from '../components/JourneyPath';
 import { coreQuestions, storyChapters } from '../data/siteData';
 import { useProgress } from '../hooks/useProgress';
 
@@ -70,17 +70,17 @@ function ChapterPage() {
       />
 
       <section className="section-spacing">
-        <div className="paper-card atlas-panel">
+        <div className="paper-card">
           <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
             <div>
               <p className="eyebrow mb-2">Story progress</p>
-              <h2 className="section-title mb-0">Where Mina is in the atlas</h2>
+              <h2 className="section-title mb-0">Where Mina is in the journey</h2>
             </div>
             <Link to="/story-map" className="text-link">
               <ArrowLeft size={14} /> Back to full route
             </Link>
           </div>
-          <StoryRouteMap activeSlug={chapter.slug} compact visited={visited} completed={completed} />
+          <JourneyPath activeSlug={chapter.slug} compact visited={visited} completed={completed} />
           <div className="mt-3">
             <ProgressBar visited={visited} completed={completed} />
           </div>

@@ -1933,6 +1933,241 @@ button:disabled,
   }
 }
 
+/* ────────────────────── journey path ────────────────────── */
+
+.journey-path {
+  position: relative;
+  padding-left: 3.2rem;
+}
+
+.journey-track {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 1.35rem;
+  width: 3px;
+  background: linear-gradient(180deg, var(--accent), var(--earth), var(--olive));
+  border-radius: 2px;
+  opacity: 0.2;
+}
+
+.journey-node {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 1.2rem;
+  padding-bottom: 1.5rem;
+}
+
+.journey-node:last-child {
+  padding-bottom: 0;
+}
+
+.journey-marker {
+  position: absolute;
+  left: -3.2rem;
+  top: 0.2rem;
+  width: 2.7rem;
+  height: 2.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--paper);
+  border: 2px solid var(--line-strong);
+  color: var(--muted);
+  font-weight: 800;
+  font-size: 0.95rem;
+  z-index: 2;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.journey-node.done .journey-marker,
+.journey-node.active .journey-marker {
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.journey-node.next .journey-marker {
+  border-color: var(--accent);
+  animation: marker-pulse 2s ease-in-out infinite;
+}
+
+@keyframes marker-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(33, 77, 87, 0.25); }
+  50% { box-shadow: 0 0 0 10px rgba(33, 77, 87, 0); }
+}
+
+.journey-card {
+  flex: 1;
+  position: relative;
+  display: block;
+  padding: 1.25rem 1.35rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  background: var(--paper);
+  text-decoration: none;
+  color: var(--text);
+  overflow: hidden;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.journey-card:hover {
+  border-color: var(--accent);
+  box-shadow: var(--shadow);
+}
+
+.journey-card-accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+}
+
+.journey-card-head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.journey-card-step {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+}
+
+.journey-card-region {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--muted);
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-pill);
+  background: var(--paper-deep);
+}
+
+.journey-card-city {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight: 700;
+  font-size: 1.35rem;
+  line-height: 1.2;
+  margin: 0 0 0.15rem;
+}
+
+.journey-card-country {
+  font-size: 0.88rem;
+  color: var(--muted);
+  margin: 0 0 0.5rem;
+}
+
+.journey-card-subtitle {
+  font-size: 0.92rem;
+  color: var(--muted);
+  margin: 0 0 0.75rem;
+  line-height: 1.5;
+}
+
+.journey-card-footer {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.journey-card-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-left: auto;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* ── compact journey (horizontal dots) ── */
+
+.compact-journey {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  padding: 0.5rem 0;
+}
+
+.compact-line {
+  flex: 1;
+  max-width: 4rem;
+  height: 2px;
+  background: var(--line);
+  transition: background-color 0.3s ease;
+}
+
+.compact-line.filled {
+  background: var(--olive);
+}
+
+.compact-dot {
+  width: 2.2rem;
+  height: 2.2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 2px solid var(--line-strong);
+  background: var(--paper);
+  color: var(--muted);
+  font-weight: 800;
+  font-size: 0.82rem;
+  text-decoration: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+
+.compact-dot.active,
+.compact-dot.done {
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+}
+
+.compact-dot.seen {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.compact-dot:hover {
+  box-shadow: var(--shadow-sm);
+}
+
+/* ── dark mode journey ── */
+
+[data-theme='dark'] .journey-card {
+  background: var(--paper);
+}
+
+[data-theme='dark'] .journey-card:hover {
+  border-color: var(--accent);
+}
+
+[data-theme='dark'] .journey-card-region {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme='dark'] .journey-marker {
+  background: var(--paper);
+}
+
+[data-theme='dark'] .compact-dot {
+  background: var(--paper);
+}
+
+[data-theme='dark'] .compact-dot.active,
+[data-theme='dark'] .compact-dot.done {
+  color: #0f1517;
+}
+
 /* ────────────────────── floating background ────────────────────── */
 
 .bg-shapes {

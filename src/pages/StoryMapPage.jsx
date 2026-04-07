@@ -1,10 +1,10 @@
 import { motion } from 'framer-motion';
 import { ArrowRight, Check, RotateCcw } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import JourneyPath from '../components/JourneyPath';
 import PageIntro from '../components/PageIntro';
 import ProgressBar from '../components/ProgressBar';
 import ScoreBadge from '../components/ScoreBadge';
-import StoryRouteMap from '../components/StoryRouteMap';
 import { storyChapters } from '../data/siteData';
 import { useProgress } from '../hooks/useProgress';
 
@@ -17,7 +17,7 @@ function StoryMapPage() {
       <PageIntro
         eyebrow="Story map"
         title="Follow the full route before you dive into the chapters"
-        intro="This atlas shows Mina's five-stop journey at a glance. Use the map for spatial context, the stop list for quick access, or the chapter cards below for more detail about what each city teaches."
+        intro="This atlas shows Mina's five-stop journey at a glance. Click any stop to enter the chapter, or scroll down for more detail about what each city teaches."
         note="Each chapter keeps the same structure: context first, interaction second, then a direct link to the next step in the story."
         noteTitle="How to use this page"
         actions={[
@@ -32,10 +32,10 @@ function StoryMapPage() {
       />
 
       <section className="section-spacing">
-        <div className="paper-card atlas-panel">
+        <div className="paper-card">
           <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
             <div>
-              <p className="eyebrow mb-2">Global route</p>
+              <p className="eyebrow mb-2">The journey</p>
               <h2 className="section-title mb-0">Click a stop to enter the chapter</h2>
             </div>
             <div className="d-flex flex-wrap gap-2">
@@ -49,9 +49,9 @@ function StoryMapPage() {
               </Link>
             </div>
           </div>
-          <StoryRouteMap visited={visited} completed={completed} />
-          <div className="mt-3">
-            <ProgressBar visited={visited} completed={completed} />
+          <ProgressBar visited={visited} completed={completed} />
+          <div className="mt-4">
+            <JourneyPath visited={visited} completed={completed} />
           </div>
         </div>
       </section>

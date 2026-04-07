@@ -5,7 +5,7 @@ import AchievementPanel from '../components/AchievementPanel';
 import AnimatedCounter from '../components/AnimatedCounter';
 import PageIntro from '../components/PageIntro';
 import ProgressBar from '../components/ProgressBar';
-import StoryRouteMap from '../components/StoryRouteMap';
+import JourneyPath from '../components/JourneyPath';
 import { coreQuestions, storyChapters, storyIntro } from '../data/siteData';
 import { useProgress } from '../hooks/useProgress';
 
@@ -35,7 +35,7 @@ function HomePage() {
       <section className="section-spacing">
         <div className="row g-4 align-items-stretch">
           <div className="col-lg-7">
-            <div className="paper-card h-100 atlas-panel">
+            <div className="paper-card h-100">
               <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
                 <div>
                   <p className="eyebrow mb-2">The route</p>
@@ -52,7 +52,7 @@ function HomePage() {
                   </Link>
                 </div>
               </div>
-              <StoryRouteMap visited={visited} completed={completed} />
+              <JourneyPath visited={visited} completed={completed} />
             </div>
           </div>
           <div className="col-lg-5">
