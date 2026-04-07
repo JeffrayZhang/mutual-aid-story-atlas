@@ -3,6 +3,6 @@ import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
-  base: '/creative-project/',
+  base: '/mutual-aid-story-atlas/',
   plugins: [react(), tailwindcss()],
 });
