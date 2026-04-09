@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import { ChevronUp, Menu, Moon, Sun, X } from 'lucide-react';
+import { ChevronUp, Menu, Moon, RotateCcw, Sun, X } from 'lucide-react';
 import { achievements as allAchievements } from '../data/achievements';
 import { useProgress } from '../hooks/useProgress';
 import AchievementToastHost from './AchievementToast';
@@ -39,7 +39,7 @@ function BackToTop() {
 }
 
 function SiteLayout() {
-  const { newAchievements, acknowledgeAchievement } = useProgress();
+  const { newAchievements, acknowledgeAchievement, reset } = useProgress();
   const [navOpen, setNavOpen] = useState(false);
   const [theme, setTheme] = useState(() => {
     try {
@@ -171,9 +171,16 @@ function SiteLayout() {
             </div>
             <div className="col-lg-3">
               <p className="small-label mb-2">Use note</p>
-              <p className="mb-0 text-body-secondary">
+              <p className="mb-3 text-body-secondary">
                 Every route marker, chapter card, and next-step link is connected so the website can be explored visually, linearly, or by theme without losing the story.
               </p>
+              <button
+                type="button"
+                className="subtle-button"
+                onClick={() => { reset(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+              >
+                <RotateCcw size={14} /> Reset all progress
+              </button>
             </div>
           </div>
         </div>
